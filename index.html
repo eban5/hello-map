@@ -1,0 +1,26 @@
+<html>
+ <head>
+  <link rel="stylesheet" href="css/style.css">
+ </head>
+ <body>
+   <div id="map"></div>
+   <script>
+     // Create a map variable
+     var map;
+     // initialize the map
+     function initMap() {
+       //create a new map JS object.
+       //Albertina Art Gallery - Vienna, Austria
+       // 48.203543, 16.3637297,15.8
+       map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 48.203543, lng: 16.3637297},
+        zoom: 13
+       });
+     }
+   </script>
+   <!-- Load the JS API -->
+   <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCgDUvtUJSAfPXB2vA6xZHvrIaygWWGX0&v=3&callback=initMap">
+   </script>
+ </body>
+</html>
