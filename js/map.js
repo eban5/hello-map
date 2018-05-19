@@ -14,28 +14,15 @@
 
      }]
      //create a new map JS object.
-     //Albertina Art Gallery - Vienna, Austria
-     // 48.203543, 16.3637297,15.8
+     // S Arlington
+     // 38.862606, -77.087269
      map = new google.maps.Map(document.getElementById('map'), {
-         center: { lat: 40.74135, lng: -73.99802 },
+         center: { lat: 38.862606, lng: -77.087269 },
          styles: styles,
          zoom: 13
      });
 
-     // var albertina = {lat: 48.203543, lng: 16.3637297};
-     // var marker = new google.maps.Marker({
-     //  position: albertina,
-     //  map: map,
-     //  title: "Marker: Albertina"
-     // });
-     // var infowindow = new google.maps.InfoWindow({
-     //  content: "Here is an infowinodow. It's working."
-     // });
-     // marker.addListener('click', function() {
-     //  infowindow.open(map, marker);
-     // });
-
-     var singleLatLng = { lat: 40.74135, lng: -73.99802 };
+     var singleLatLng = { lat: 38.8630671, lng: -77.0866913 };
      // TODO: Create a single marker appearing on initialize -
      // Create it with the position of the singleLatLng,
      // on the map, and give it your own title!
