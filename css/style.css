@@ -1,10 +1,111 @@
 html,
 body {
+    font-family: Arial, sans-serif;
     height: 100%;
     margin: 0;
     padding: 0;
 }
 
-#map {
+.container {
     height: 100%;
+    position: relative;
+}
+
+input[type=button] {
+    display: inline-block;
+    padding: 0.35em 1.2em;
+    border: 0.1em solid #FFFFFF;
+    margin: 0 0.3em 0.3em 0;
+    border-radius: 0.12em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: #333333;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+input[type=button]:hover {
+    color: white;
+    background-color: #155263;
+}
+
+@media all and (max-width:30em) {
+    input[type=button] {
+        display: block;
+        margin: 0.4em auto;
+    }
+}
+
+
+input {
+    font-size: 12px;
+}
+
+h1 {
+    color: #525454;
+    font-size: 22px;
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+#hide-listings,
+#show-listings {
+    width: 48%;
+}
+
+hr {
+    background: #D0D7D9;
+    height: 1px;
+    margin: 20px 0 20px 0;
+    border: none;
+}
+
+#map {
+    bottom: 0px;
+    height: 100%;
+    left: 362px;
+    position: absolute;
+    right: 0px;
+}
+
+.options-box {
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 3px;
+    height: 100%;
+    line-height: 35px;
+    padding: 10px 10px 30px 10px;
+    text-align: left;
+    width: 340px;
+}
+
+#pano {
+    width: 200px;
+    height: 200px;
+}
+
+#places-search,
+#search-within-time-text {
+    width: 84%;
+}
+
+.text {
+    font-size: 12px;
+}
+
+#toggle-drawing {
+    width: 27%;
+    position: relative;
+    margin-left: 10px;
+}
+
+#zoom-to-area-text {
+    width: 70%;
+}
+
+#zoom-to-area {
+    width: 24%;
 }
