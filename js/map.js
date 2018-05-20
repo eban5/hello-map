@@ -131,7 +131,7 @@
      // Constructor creates a new map - only center and zoom are required.
      map = new google.maps.Map(document.getElementById('map'), {
          center: { lat: 38.862606, lng: -77.087269 },
-         zoom: 14,
+         zoom: 13,
          styles: styles,
          mapTypeControl: false
      });
@@ -154,11 +154,12 @@
      // Normally we'd have these in a database instead.
      var locations = [
          { title: 'AMC Courthouse Plaza 8', location: { lat: 38.8902583, lng: -77.0862996 } },
-         { title: 'AMC Shirlington 7', location: { lat: 38.8412795, lng: -77.0912915} },
-         { title: 'Angelika Film Center & Cafe at Mosaic', location: { lat: 38.8717874, lng: -77.2318841 } },
-         { title: 'Rave Fairfax Corner 14 Theater', location: { lat: 38.8588648, lng: -77.3588339 } },
+         { title: 'AMC Shirlington 7', location: { lat: 38.841283, lng: -77.088731} },
+         { title: 'Arlington Cinema and Drafthouse', location: { lat: 38.862614, lng: -77.087208, } },
+         { title: 'Regal Cinemas Ballston Commons 12', location: { lat: 38.878555, lng: -77.111473 } },
          { title: 'AMC Hoffman Center 22', location: { lat: 38.8023832, lng: -77.0727257 } },
-         { title: 'Landmark\'s E Street Cinema', location: { lat: 38.8962795, lng: -77.0287645  } }
+         { title: 'Landmark\'s E Street Cinema', location: { lat: 38.8962795, lng: -77.0287645  } },
+         { title: 'AMC Loews Georgetown', location: { lat: 38.902693, lng: -77.061733  } }
      ];
 
      var largeInfowindow = new google.maps.InfoWindow();
