@@ -126,12 +126,6 @@ function closeNav() {
         KNOCKOUT JS - organizing and storing markers
      ---------------------------------------------------------------------- */
 
-     //by making the variables into knockout "observables", knockout will be notified when their value changes
-     // function Theater(name) {
-     //     var self = this;
-     //     self.name = name;
-     // }
-
      function AppViewModel() {
          this.firstName = ko.observable('John');
          this.lastName = ko.observable('Smith');
