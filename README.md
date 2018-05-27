@@ -2,8 +2,9 @@ This map-based web application demonstrates the use of the Google Maps/Places/St
 
 ## How To Run
 
-
-
+1. Download the repository
+2. Open "index.html" with your browser of choice
+3. Click on the "hamburger" icon to expand the options menu
 
 ### Attributions
 
@@ -11,4 +12,5 @@ This map-based web application demonstrates the use of the Google Maps/Places/St
 2. Color Pallette: [Color Hunt](http://colorhunt.co/c/108559)
 3. Foursquare Official Docs
 4. [KnockoutJS stringStartsWith](https://stackoverflow.com/questions/30168480/ko-utils-stringstartswith-not-working)
+5. Sidenav Push uses parts from an example found in [W3Schools](https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_sidenav_push)
 
