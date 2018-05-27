@@ -16,6 +16,7 @@
         <!-- OPTIONS BOX -->
         <div class="options-box">
             <h1>Find Nearby Movie Theaters</h1>
+            <h3>Welcome, <strong data-bind="text: fullName"></strong>!</h3>
             <div style="display: inline-block; margin-left: 15px;">
                 <input id="show-listings" type="button" value="Show Listings">
                 <input id="hide-listings" type="button" value="Hide Listings">
@@ -26,6 +27,12 @@
                 <input id="toggle-drawing" type="button" value="Drawing Tools">
                 <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
                 <input id="zoom-to-area" type="button" value="Zoom">
+            </div>
+            <div style="display: inline-block; width: 45%; text-align: center; margin-left: 15px;">
+                <span class="text"> Filter Markers by Theater Brand</span>
+                <input id="filter-markers" type="text" placeholder="e.g., AMC or Regal">
+                <input id="go-filter-markers" type="button" value="Go">
+                <input id="clear-filter-markers" type="button" value="Clear">
             </div>
             <!-- <hr> -->
             <div style="display: inline-block; width: 25%; margin-left: 15px;">
@@ -48,13 +55,19 @@
                 <input id="search-within-time" type="button" value="Go">
             </div>
             <!-- <hr> -->
-            <div style="display: inline-block; margin-left: 15px;">
+            <div style="display: block; margin-left: 15px; width: 25%; ">
                 <span class="text">Search for nearby places</span>
                 <input id="places-search" type="text" placeholder="Ex: Restaurant, Bar">
                 <input id="go-places" type="button" value="Go">
             </div>
+            <div style="display: inline-block; margin-left: 15px; width: 25%; ">
+                <span class="text">Popular Restaurants Nearby</span>
+                <ul class="topfive">
+                </ul>
+            </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="js/knockout.js" type="text/javascript" charset="utf-8" async defer></script>
     <script src="js/map.js" type="text/javascript" charset="utf-8" async defer></script>
     <!-- Load the JS API -->
