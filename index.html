@@ -1,17 +1,89 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Hello, Map!</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Hello, Map!</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
+
 <body>
-    <div id="map"></div>
+    <div class="container">
+        <!-- MAP -->
+        <div id="map"></div>
+        <!-- OPTIONS BOX -->
+        <div class="options-box">
+            <h1>Find Nearby Movie Theaters</h1>
+            <h3>Welcome, <strong data-bind="text: fullName"></strong>!</h3>
+            <!-- LOCATIONS -->
+            <div style="display: inline-block; width: 30%; margin-left: 5%;">Locations
+                <ul data-bind="foreach: filteredItems" class="theaters">
+                    <li data-bind="text: title"></li>
+                </ul>
+            </div>
+            <!-- TOOLS -->
+            <div style="display: inline-block; width: 25%; vertical-align: top; text-align: left;">
+                <!-- <div style="display: inline-block; margin-left: 15px;"> -->
+                <input id="show-listings" type="button" value="Show Listings">
+                <input id="hide-listings" type="button" value="Hide Listings">
+                <p>Filter:
+                    <input data-bind="value: filter, valueUpdate: 'afterkeydown'" />
+                </p>
+                <span class="text"> Draw a shape to search within it for theaters!</span>
+                <input id="toggle-drawing" type="button" value="Drawing Tools">
+                <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
+                <input id="zoom-to-area" type="button" value="Zoom">
+                <br>
+                <span class="text"> Within </span>
+                <select id="max-duration">
+                    <option value="10">10 min</option>
+                    <option value="15">15 min</option>
+                    <option value="30">30 min</option>
+                    <option value="60">1 hour</option>
+                </select>
+                <select id="mode">
+                    <option value="DRIVING">drive</option>
+                    <option value="WALKING">walk</option>
+                    <option value="BICYCLING">bike</option>
+                    <option value="TRANSIT">transit ride</option>
+                </select>
+                <span class="text">of</span>
+                <br>
+                <input id="search-within-time-text" type="text" placeholder="Ex: AMC Courthouse">
+                <input id="search-within-time" type="button" value="Go">
+                <br>
+                <span class="text">Search for nearby places</span>
+                <input id="places-search" type="text" placeholder="Ex: Restaurant, Bar">
+                <input id="go-places" type="button" value="Go">
+                <br>
+            </div>
+            <div style="display: inline-block; width: 25%; vertical-align: top; text-align: left; margin-left: 5%; margin-right: 3%;">Popular Restaurants Nearby
+                <ul class="topfive">
+                </ul>
+            </div>
+            <!--             <div style="display: inline-block; width: 45%; text-align: center; margin-left: 15px;">
+                <span class="text"> Filter Markers by Theater Brand</span>
+                <input id="filter-markers" type="text" placeholder="e.g., AMC or Regal">
+                <input id="go-filter-markers" type="button" value="Go">
+                <input id="clear-filter-markers" type="button" value="Clear">
+            </div> -->
+            <!-- <hr> -->
+            <!-- <div style="display: inline-block; width: 25%; margin-left: 15px;"> -->
+            <!-- </div> -->
+            <!-- <hr> -->
+            <!-- <div style="display: block; margin-left: 15px; width: 25%; "> -->
+            <!-- </div> -->
+            <!-- <div style="display: inline-block; margin-left: 15px; width: 25%; "> -->
+            <!-- </div> -->
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="js/knockout.js" type="text/javascript" charset="utf-8" async defer></script>
     <script src="js/map.js" type="text/javascript" charset="utf-8" async defer></script>
     <!-- Load the JS API -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCgDUvtUJSAfPXB2vA6xZHvrIaygWWGX0&v=3&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCCgDUvtUJSAfPXB2vA6xZHvrIaygWWGX0&v=3&callback=initMap"></script>
 </body>
 
 </html>
