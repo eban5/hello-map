@@ -117,10 +117,10 @@
      ---------------------------------------------------------------------- */
 
      //by making the variables into knockout "observables", knockout will be notified when their value changes
-     function Theater(name) {
-         var self = this;
-         self.name = name;
-     }
+     // function Theater(name) {
+     //     var self = this;
+     //     self.name = name;
+     // }
 
      function AppViewModel() {
          this.firstName = ko.observable('John');
@@ -142,19 +142,23 @@
          };
 
          // These are movie theaters that will be shown to the user.
-        this.listLocations = ko.observableArray([]);
+         this.listLocations = ko.observableArray([]);
 
-        for (var i = 0; i < locations.length; i++) {
-            this.listLocations().push(locations[i])
-        }
+         for (var i = 0; i < locations.length; i++) {
+             this.listLocations().push(locations[i])
+         }
 
-        // for (var i = 0; i < this.listLocations().length; i++) {
-        //     var item = this.listLocations()[i];
-
-        //     item.addListener('click', function() {
-        //  //     populateInfoWindow(this, largeInfowindow);
-        //  });
-        // }
+         //listener for when a list item is clicked
+         //used help from post at https://discussions.udacity.com/t/open-marker-infowindow-when-clicked-on-from-list/746580
+         this.launchWindow = function(location) {
+             console.log(location.title)
+             var marker = markers.filter(m => m.title === location.title)[0];
+             console.log(marker)
+             if (marker) {
+                 google.maps.event.trigger(marker, 'click');
+             }
+             getFoursquare(location);
+         };
 
          this.filteredItems = ko.computed(function() {
              var filter = this.filter().toLowerCase();

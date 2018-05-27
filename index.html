@@ -19,13 +19,12 @@
             <h3>Welcome, <strong data-bind="text: fullName"></strong>!</h3>
             <!-- LOCATIONS -->
             <div style="display: inline-block; width: 30%; margin-left: 5%;">Locations
-                <ul data-bind="foreach: filteredItems" class="theaters">
-                    <li data-bind="text: title"></li>
-                </ul>
+                <div data-bind="foreach: filteredItems" class="theaters">
+                    <li><a href="#" data-bind="text: title, click: $parent.launchWindow"></a></li>
+                </div>
             </div>
             <!-- TOOLS -->
             <div style="display: inline-block; width: 25%; vertical-align: top; text-align: left;">
-                <!-- <div style="display: inline-block; margin-left: 15px;"> -->
                 <input id="show-listings" type="button" value="Show Listings">
                 <input id="hide-listings" type="button" value="Hide Listings">
                 <p>Filter:
@@ -63,20 +62,6 @@
                 <ul class="topfive">
                 </ul>
             </div>
-            <!--             <div style="display: inline-block; width: 45%; text-align: center; margin-left: 15px;">
-                <span class="text"> Filter Markers by Theater Brand</span>
-                <input id="filter-markers" type="text" placeholder="e.g., AMC or Regal">
-                <input id="go-filter-markers" type="button" value="Go">
-                <input id="clear-filter-markers" type="button" value="Clear">
-            </div> -->
-            <!-- <hr> -->
-            <!-- <div style="display: inline-block; width: 25%; margin-left: 15px;"> -->
-            <!-- </div> -->
-            <!-- <hr> -->
-            <!-- <div style="display: block; margin-left: 15px; width: 25%; "> -->
-            <!-- </div> -->
-            <!-- <div style="display: inline-block; margin-left: 15px; width: 25%; "> -->
-            <!-- </div> -->
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>

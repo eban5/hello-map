@@ -41,6 +41,17 @@ input[type=button]:hover {
     }
 }
 
+a {
+    color: blue;
+}
+
+a:hover {
+    color:  red;
+}
+
+a:visited {
+    color: black;
+}
 
 input {
     font-size: 12px;
