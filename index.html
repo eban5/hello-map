@@ -14,53 +14,57 @@
         <!-- MAP -->
         <div id="map"></div>
         <!-- OPTIONS BOX -->
-        <div class="options-box">
-            <h1>Find Nearby Movie Theaters</h1>
-            <h3>Welcome, <strong data-bind="text: fullName"></strong>!</h3>
-            <!-- LOCATIONS -->
-            <div style="display: inline-block; width: 30%; margin-left: 5%;">Locations
-                <div data-bind="foreach: filteredItems" class="theaters">
-                    <li><a href="#" data-bind="text: title, click: $parent.launchWindow"></a></li>
+        <div id="menuToggle">
+            <input id="burger" type="checkbox" />
+            <span></span>
+            <span></span>
+            <span></span>
+            <div id="menu" class="options-box">
+                <h1>Find Nearby Movie Theaters</h1>
+                <!-- LOCATIONS -->
+                <div style="display: inline-block; width: 30%; margin-left: 5%;">Locations
+                    <div data-bind="foreach: filteredItems" class="theaters">
+                        <li><a href="#" data-bind="text: title, click: $parent.launchWindow"></a></li>
+                    </div>
                 </div>
-            </div>
-            <!-- TOOLS -->
-            <div style="display: inline-block; width: 25%; vertical-align: top; text-align: left;">
-                <input id="show-listings" type="button" value="Show Listings">
-                <input id="hide-listings" type="button" value="Hide Listings">
-                <p>Filter:
-                    <input data-bind="value: filter, valueUpdate: 'afterkeydown'" />
-                </p>
-                <span class="text"> Draw a shape to search within it for theaters!</span>
-                <input id="toggle-drawing" type="button" value="Drawing Tools">
-                <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
-                <input id="zoom-to-area" type="button" value="Zoom">
-                <br>
-                <span class="text"> Within </span>
-                <select id="max-duration">
-                    <option value="10">10 min</option>
-                    <option value="15">15 min</option>
-                    <option value="30">30 min</option>
-                    <option value="60">1 hour</option>
-                </select>
-                <select id="mode">
-                    <option value="DRIVING">drive</option>
-                    <option value="WALKING">walk</option>
-                    <option value="BICYCLING">bike</option>
-                    <option value="TRANSIT">transit ride</option>
-                </select>
-                <span class="text">of</span>
-                <br>
-                <input id="search-within-time-text" type="text" placeholder="Ex: AMC Courthouse">
-                <input id="search-within-time" type="button" value="Go">
-                <br>
-                <span class="text">Search for nearby places</span>
-                <input id="places-search" type="text" placeholder="Ex: Restaurant, Bar">
-                <input id="go-places" type="button" value="Go">
-                <br>
-            </div>
-            <div style="display: inline-block; width: 25%; vertical-align: top; text-align: left; margin-left: 5%; margin-right: 3%;">Popular Restaurants Nearby
-                <ul class="topfive">
-                </ul>
+                <!-- TOOLS -->
+                <div style="display: inline-block; width: 25%; vertical-align: top; text-align: left;">
+                    <input id="show-listings" type="button" value="Show Listings">
+                    <input id="hide-listings" type="button" value="Hide Listings">
+                    <p>Filter:
+                        <input data-bind="value: filter, valueUpdate: 'afterkeydown'" />
+                    </p>
+                    <p>Draw a shape to search within it for theaters!</p>
+                    <input id="toggle-drawing" type="button" value="Drawing Tools">
+                    <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
+                    <input id="zoom-to-area" type="button" value="Zoom">
+                    <br> Within
+                    <select id="max-duration">
+                        <option value="10">10 min</option>
+                        <option value="15">15 min</option>
+                        <option value="30">30 min</option>
+                        <option value="60">1 hour</option>
+                    </select>
+                    <select id="mode">
+                        <option value="DRIVING">drive</option>
+                        <option value="WALKING">walk</option>
+                        <option value="BICYCLING">bike</option>
+                        <option value="TRANSIT">transit ride</option>
+                    </select>
+                    of
+                    <br>
+                    <input id="search-within-time-text" type="text" placeholder="Ex: AMC Courthouse">
+                    <input id="search-within-time" type="button" value="Go">
+                    <br>
+                    <p>Search for nearby places</p>
+                    <input id="places-search" type="text" placeholder="Ex: Restaurant, Bar">
+                    <input id="go-places" type="button" value="Go">
+                    <br>
+                </div>
+                <div style="display: inline-block; width: 25%; vertical-align: top; text-align: left; margin-left: 5%; margin-right: 3%;">Popular Restaurants Nearby
+                    <ul class="topfive">
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
