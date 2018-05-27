@@ -1,3 +1,13 @@
+function openNav() {
+    document.getElementById("mySidenav").style.width = "400px";
+    document.getElementById("main").style.marginLeft = "400px";
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("main").style.marginLeft= "0";
+}
+
  var map;
 
  // Create a new blank array for all the listing markers.
@@ -689,7 +699,7 @@
              console.log(venues);
              $('.topfive').empty();
              $.each(venues, function(i, venue) {
-                 $('.topfive').append('<li>' + venue.venue.name + '</li>');
+                 $('.topfive').append('<li><a href="#">' + venue.venue.name + '</a></li>');
              });
          },
          error: function(data) {
