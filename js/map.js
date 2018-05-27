@@ -100,24 +100,6 @@
      // Bias the searchbox to within the bounds of the map.
      searchBox.setBounds(map.getBounds());
 
-/* ----------------------------------------------------------------------
-   KNOCKOUT JS - organizing and storing markers
----------------------------------------------------------------------- */
-
-    //by making the variables into knockout "observables", knockout will be notified when their value changes
-    function AppViewModel() {
-        this.firstName = ko.observable('John');
-        this.lastName = ko.observable('Smith');
-
-        this.fullName = ko.computed(function() {
-            return this.firstName() + " " + this.lastName();
-
-        }, this);
-
-        // console.log(this.fullName());
-    }
-
-    ko.applyBindings(new AppViewModel());
 
      // These are movie theaters that will be shown to the user.
      var locations = [
@@ -129,6 +111,67 @@
          { title: 'Landmark\'s E Street Cinema', location: { lat: 38.8962795, lng: -77.0287645 } },
          { title: 'AMC Loews Georgetown', location: { lat: 38.902693, lng: -77.061733 } }
      ];
+
+     /* ----------------------------------------------------------------------
+        KNOCKOUT JS - organizing and storing markers
+     ---------------------------------------------------------------------- */
+
+     //by making the variables into knockout "observables", knockout will be notified when their value changes
+     function Theater(name) {
+         var self = this;
+         self.name = name;
+     }
+
+     function AppViewModel() {
+         this.firstName = ko.observable('John');
+         this.lastName = ko.observable('Smith');
+
+         this.fullName = ko.computed(function() {
+             return this.firstName() + " " + this.lastName();
+
+         }, this);
+
+         this.filter = ko.observable("")
+
+         //missing Knockout function
+         var stringStartsWith = function(string, startsWith) {
+             string = string || "";
+             if (startsWith.length > string.length)
+                 return false;
+             return string.substring(0, startsWith.length) === startsWith;
+         };
+
+         // These are movie theaters that will be shown to the user.
+        this.listLocations = ko.observableArray([]);
+
+        for (var i = 0; i < locations.length; i++) {
+            this.listLocations().push(locations[i])
+        }
+
+        // for (var i = 0; i < this.listLocations().length; i++) {
+        //     var item = this.listLocations()[i];
+
+        //     item.addListener('click', function() {
+        //  //     populateInfoWindow(this, largeInfowindow);
+        //  });
+        // }
+
+         this.filteredItems = ko.computed(function() {
+             var filter = this.filter().toLowerCase();
+             if (!filter) {
+                 return this.listLocations();
+             } else {
+                 return ko.utils.arrayFilter(this.listLocations(), function(item) {
+                     return stringStartsWith(item.title.toLowerCase(), filter);
+                 });
+             }
+         }, this);
+
+     }
+
+     ko.applyBindings(new AppViewModel());
+
+
 
      var largeInfowindow = new google.maps.InfoWindow();
 
@@ -209,19 +252,6 @@
      // Listen for the event fired when the user selects a prediction and clicks
      // "go" more details for that place.
      document.getElementById('go-places').addEventListener('click', textSearchPlaces);
-
-     //Filter markers based on text input
-     document.getElementById('go-filter-markers').addEventListener('click', function() {
-        var filterVal = document.getElementById('filter-markers').value;
-        filterMarkers(filterVal)
-     })
-
-     //clear the marker filter
-     document.getElementById('clear-filter-markers').addEventListener('click', function() {
-        var blank = '';
-        filterMarkers(blank)
-        document.getElementById('filter-markers').value = '';
-     });
 
      // Add an event listener so that the polygon is captured,  call the
      // searchWithinPolygon function. This will show the markers in the polygon,
@@ -310,18 +340,18 @@
      }
  }
 
-//This function will filter the visible markers (on the map) by the search term of the theater Brand
-function filterMarkers(brand) {
+ //This function will filter the visible markers (on the map) by the search term of the theater Brand
+ function filterMarkers(brand) {
      for (var i = 0; i < markers.length; i++) {
-        // Set matching markers to visible
-        marker = markers[i];
-        if (marker.title.startsWith(brand) || brand.length == 0) {
-            marker.setVisible(true);
-        } else {
-            marker.setVisible(false);
-        }
-    }
-}
+         // Set matching markers to visible
+         marker = markers[i];
+         if (marker.title.startsWith(brand) || brand.length == 0) {
+             marker.setVisible(true);
+         } else {
+             marker.setVisible(false);
+         }
+     }
+ }
 
  // This function takes in a COLOR, and then creates a new marker
  // icon of that color. The icon will be 21 px wide by 34 high, have an origin
@@ -634,32 +664,32 @@ function filterMarkers(brand) {
     FOURSQUARE API - Get recommendations for food near selected marker
  ---------------------------------------------------------------------- */
 
-function getFoursquare(marker) {
+ function getFoursquare(marker) {
 
-    var foursquareConfig = {
-        client_id: 'BS2SBZYCWRNCKASPGYYQIJEF03GJSJDRIQZYPJB52GTXBS3L',
-        client_secret: 'V5EW4FXDJL5SI3QNYF4YJDQFWRSZQ105GMQY1XT54A3CT514',
-        v: '20180323',
-        section: 'food',
-        ll: marker.position.lat() + "," + marker.position.lng(),
-        limit: '5'
-    }
+     var foursquareConfig = {
+         client_id: 'BS2SBZYCWRNCKASPGYYQIJEF03GJSJDRIQZYPJB52GTXBS3L',
+         client_secret: 'V5EW4FXDJL5SI3QNYF4YJDQFWRSZQ105GMQY1XT54A3CT514',
+         v: '20180323',
+         section: 'food',
+         ll: marker.position.lat() + "," + marker.position.lng(),
+         limit: '5'
+     }
 
-    var url = 'https://api.foursquare.com/v2/venues/explore?client_id=' + foursquareConfig.client_id + '&client_secret=' + foursquareConfig.client_secret + '&v=' + foursquareConfig.v + '&section=' + foursquareConfig.section + '&ll=' + foursquareConfig.ll + '&limit=' + foursquareConfig.limit;
+     var url = 'https://api.foursquare.com/v2/venues/explore?client_id=' + foursquareConfig.client_id + '&client_secret=' + foursquareConfig.client_secret + '&v=' + foursquareConfig.v + '&section=' + foursquareConfig.section + '&ll=' + foursquareConfig.ll + '&limit=' + foursquareConfig.limit;
 
-  $.ajax({
-    url: url,
-    dataType: 'json',
-    success: function(data){
-      var venues = data.response.groups[0].items;
-      console.log(venues);
-      $('.topfive').empty();
-      $.each(venues, function(i,venue){
-        $('.topfive').append('<li>' + venue.venue.name + '</li>');
-      });
-    },
-    error: function(data) {
-        alert("Error with the Foursquare API. Please contact the webmaster. Sorry for the inconvenience.")
-    }
-  });
-};
+     $.ajax({
+         url: url,
+         dataType: 'json',
+         success: function(data) {
+             var venues = data.response.groups[0].items;
+             console.log(venues);
+             $('.topfive').empty();
+             $.each(venues, function(i, venue) {
+                 $('.topfive').append('<li>' + venue.venue.name + '</li>');
+             });
+         },
+         error: function(data) {
+             alert("Error with the Foursquare API. Please contact the webmaster. Sorry for the inconvenience.")
+         }
+     });
+ };
