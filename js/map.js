@@ -126,12 +126,6 @@ function closeNav() {
         KNOCKOUT JS - organizing and storing markers
      ---------------------------------------------------------------------- */
 
-     //by making the variables into knockout "observables", knockout will be notified when their value changes
-     // function Theater(name) {
-     //     var self = this;
-     //     self.name = name;
-     // }
-
      function AppViewModel() {
          this.firstName = ko.observable('John');
          this.lastName = ko.observable('Smith');
@@ -158,12 +152,10 @@ function closeNav() {
              this.listLocations().push(locations[i])
          }
 
-         //listener for when a list item is clicked
-         //used help from post at https://discussions.udacity.com/t/open-marker-infowindow-when-clicked-on-from-list/746580
+         //this next launchWindow snippet is my own but I looked at an instructor post at https://discussions.udacity.com/t/open-marker-infowindow-when-clicked-on-from-list/746580 when I got stuck. This helped guide my research.
          this.launchWindow = function(location) {
-             console.log(location.title)
+             //map the selected location to the Google Maps marker from our locations array by matching title
              var marker = markers.filter(m => m.title === location.title)[0];
-             console.log(marker)
              if (marker) {
                  google.maps.event.trigger(marker, 'click');
              }
