@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -23,9 +23,9 @@
             <!-- LOCATIONS -->
             <div style="display: block;">
                 <h3>Locations</h3>
-                <div data-bind="foreach: filteredItems" class="theaters">
+                <ul data-bind="foreach: filteredItems" class="theaters">
                     <li><a href="#" data-bind="text: title, click: $parent.launchWindow"></a></li>
-                </div>
+                </ul>
             </div>
             <!-- TOOLS -->
             <div style="display: block;">
@@ -68,8 +68,8 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="js/knockout.js" type="text/javascript" charset="utf-8" async defer></script>
-    <script src="js/map.js" type="text/javascript" charset="utf-8" async defer></script>
+    <script src="js/knockout.js" async defer></script>
+    <script src="js/map.js" async defer></script>
     <!-- Load the JS API -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCCgDUvtUJSAfPXB2vA6xZHvrIaygWWGX0&v=3&callback=initMap"></script>
 </body>
