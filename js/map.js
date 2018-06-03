@@ -12,6 +12,14 @@ function closeNav() {
     document.getElementById("main").style.marginLeft = "0";
 }
 
+//ASCII Key Code 27 is the ESCAPE button. When that is pressed, collapse the sidenav slideout.
+$(document).keyup(function(e) {
+    if (e.keyCode == 27) {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+    }
+});
+
 function googleMapsError() {
     alert("Google Maps encountered an error while loading. Please contact the webmaster.");
 }
@@ -130,6 +138,12 @@ function initMap() {
         { title: 'AMC Loews Georgetown', location: { lat: 38.902693, lng: -77.061733 } }
     ];
 
+    var Location = function(info) {
+        this.title = info.title;
+        this.location = info.location;
+        this.marker = info.marker;
+    }
+
     /* ----------------------------------------------------------------------
        KNOCKOUT JS - organizing and storing markers
     ---------------------------------------------------------------------- */
@@ -145,9 +159,11 @@ function initMap() {
                     return string.substring(0, startsWith.length) === startsWith;
                 };
         */
-        this.filter = ko.observable("");
-        this.maxDuration = ko.observableArray([10, 15, 30, 60]);
-        this.travelMethod = ko.observableArray([
+
+        var self = this;
+        self.filter = ko.observable("");
+        self.maxDuration = ko.observableArray([10, 15, 30, 60]);
+        self.travelMethod = ko.observableArray([
             { value: "DRIVING", displayText: "drive" },
             { value: "WALKING", displayText: "walk" },
             { value: "BICYCLING", displayText: "bike" },
@@ -155,14 +171,18 @@ function initMap() {
         ]);
 
         // These are movie theaters that will be shown to the user.
-        this.listLocations = ko.observableArray([]);
+        self.listLocations = ko.observableArray([]);
 
-        for (var i = 0; i < locations.length; i++) {
-            this.listLocations().push(locations[i]);
-        }
+        locations.forEach(function(location) {
+            self.listLocations().push(new Location(location))
+        });
+
+        // for (var i = 0; i < locations.length; i++) {
+        //     self.listLocations().push(locations[i]);
+        // }
 
         //this next launchWindow snippet is my own but I looked at an instructor post at https://discussions.udacity.com/t/open-marker-infowindow-when-clicked-on-from-list/746580 when I got stuck. This helped guide my research.
-        this.launchWindow = function(location) {
+        self.launchWindow = function(location) {
             //map the selected location to the Google Maps marker from our locations array by matching title
             var marker = markers.filter(m => m.title === location.title)[0];
             if (marker) {
@@ -170,20 +190,25 @@ function initMap() {
             }
         };
 
-        this.filteredItems = ko.computed(function() {
-            var filter = this.filter().toLowerCase();
+        //filter the list of markers as well as the drawn marker icons on the map
+        self.filteredItems = ko.computed(function() {
+            var filter = self.filter().toLowerCase();
             if (!filter) {
-                return this.listLocations();
+                ko.utils.arrayForEach(self.listLocations(), function(item) {
+                    item.marker.setVisible(true);
+                });
+                return self.listLocations();
             } else {
-                return ko.utils.arrayFilter(this.listLocations(), function(item) {
-                    return item.title.toLowerCase().indexOf(filter) > -1;
+                return ko.utils.arrayFilter(self.listLocations(), function(item) {
+                    var result = (item.title.toLowerCase().search(filter) >= 0)
+                    item.marker.setVisible(result);
+                    return result;
                 });
             }
-        }, this);
+        });
 
     }
 
-    ko.applyBindings(new AppViewModel());
     /* ----------------------------------------------------------------------
     ---------------------------------------------------------------------- */
 
@@ -226,9 +251,7 @@ function initMap() {
         // Create an onclick event to open the large infowindow at each marker.
         marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow);
-            // this.setIcon(highlightedIcon);
-            // setTimeout(function(){ marker.setIcon(defaultIcon); }, 5000);
-
+            animateMarker(this);
             getFoursquare(this);
         });
         // Two event listeners - one for mouseover, one for mouseout,
@@ -240,6 +263,30 @@ function initMap() {
             this.setIcon(defaultIcon);
         });
     }
+
+    function animateMarker(marker) {
+        highlightMarker(marker)
+            .then(unHighlightMarker(marker));
+    }
+
+    function highlightMarker(marker) {
+        var promise = new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                resolve(marker.setIcon(highlightedIcon));
+            }, 200);
+        });
+        return promise;
+    };
+
+    function unHighlightMarker() {
+        var promise = new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                resolve(marker.setIcon(defaultIcon));
+            }, 4000);
+        });
+        return promise;
+    };
+
     showListings();
 
     document.getElementById('show-listings').addEventListener('click', showListings);
@@ -291,6 +338,8 @@ function initMap() {
         polygon.getPath().addListener('set_at', searchWithinPolygon);
         polygon.getPath().addListener('insert_at', searchWithinPolygon);
     });
+    ko.applyBindings(new AppViewModel());
+
 }
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
@@ -697,6 +746,7 @@ function getFoursquare(marker) {
 
     var url = 'https://api.foursquare.com/v2/venues/explore?client_id=' + foursquareConfig.client_id + '&client_secret=' + foursquareConfig.client_secret + '&v=' + foursquareConfig.v + '&section=' + foursquareConfig.section + '&ll=' + foursquareConfig.ll + '&limit=' + foursquareConfig.limit;
 
+
     $.ajax({
         url: url,
         dataType: 'json',
@@ -705,11 +755,33 @@ function getFoursquare(marker) {
             console.log(venues);
             $('.topfive').empty();
             $.each(venues, function(i, venue) {
-                $('.topfive').append('<li><a href="#">' + venue.venue.name + '</a></li>');
+                var fsURL = "";
+
+                var venueURL = 'https://api.foursquare.com/v2/venues/' + venue.venue.id + '/?client_id=' + foursquareConfig.client_id + '&client_secret=' + foursquareConfig.client_secret + '&v=' + foursquareConfig.v;
+                fsURL = getVenueLink(venueURL);
+                console.log(fsURL)
+                $('.topfive').append('<li><a href="' + fsURL + '">' + venue.venue.name + '</a></li>');
             });
         },
         error: function(data) {
             alert("Error with the Foursquare API. Please contact the webmaster. Sorry for the inconvenience.");
         }
     });
+
+    function getVenueLink(fsurl) {
+
+        $.ajax({
+            url: fsurl,
+            dataType: 'json',
+            success: function(response) {
+                var venueLink = response.response.venue.canonicalUrl;
+                console.log(venueLink)
+                return venueLink;
+            },
+            error: function(response) {
+                alert("Foursquare API error. Please contact the webmaster.")
+            }
+        });
+    }
+
 }
