@@ -2,6 +2,8 @@ This map-based web application demonstrates the use of the Google Maps/Places/St
 
 ## How To Run
 
+See the live demo at [https://eban5.github.io/hello-map/](https://eban5.github.io/hello-map/) or follow the instructions below to run the project locally.
+
 1. Download the repository
 2. Open "index.html" with your browser of choice
 3. Click on the "hamburger" icon to expand the options menu

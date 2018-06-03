@@ -195,12 +195,7 @@ function initMap() {
         var self = this;
         self.filter = ko.observable("");
         self.maxDuration = ko.observableArray([10, 15, 30, 60]);
-        self.travelMethod = ko.observableArray([
-            { value: "DRIVING", displayText: "drive" },
-            { value: "WALKING", displayText: "walk" },
-            { value: "BICYCLING", displayText: "bike" },
-            { value: "TRANSIT", displayText: "transit" }
-        ]);
+        self.travelMethod = ko.observableArray(["DRIVING","WALKING","BICYCLING","TRANSIT"]);
 
         // These are movie theaters that will be shown to the user.
         self.listLocations = ko.observableArray([]);
@@ -237,7 +232,49 @@ function initMap() {
                 });
             }
         });
+
+        /* ----------------------------------------------------------------------
+           Knockout Click Bindings
+        ---------------------------------------------------------------------- */
+        self.showListings = function() {
+            var bounds = new google.maps.LatLngBounds();
+
+            // Extend the boundaries of the map for each marker and display the marker
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(map);
+                bounds.extend(markers[i].position);
+            }
+            map.fitBounds(bounds);
+        }
+        //show the listings on load
+        self.showListings();
+
+        self.hideListings = function() {
+            hideMarkers(markers);
+        }
+
+        self.toggleDrawingMap = function() {
+            toggleDrawing(drawingManager);
+        }
+
+        self.toggleZoomToArea = function() {
+            zoomToArea();
+        }
+
+        self.toggleSearchWithinTime = function() {
+            searchWithinTime();
+        }
+
+        self.goPlaces = function() {
+            textSearchPlaces();
+        }
+
     }
+
+
+
+    ko.applyBindings(new AppViewModel());
+
 
     /* ----------------------------------------------------------------------
     ---------------------------------------------------------------------- */
@@ -285,35 +322,12 @@ function initMap() {
         return promise;
     };
 
-    showListings();
-
-    document.getElementById('show-listings').addEventListener('click', showListings);
-
-    document.getElementById('hide-listings').addEventListener('click', function() {
-        hideMarkers(markers);
-    });
-
-    document.getElementById('toggle-drawing').addEventListener('click', function() {
-        toggleDrawing(drawingManager);
-    });
-
-    document.getElementById('zoom-to-area').addEventListener('click', function() {
-        zoomToArea();
-    });
-
-    document.getElementById('search-within-time').addEventListener('click', function() {
-        searchWithinTime();
-    });
 
     // Listen for the event fired when the user selects a prediction from the
     // picklist and retrieve more details for that place.
     searchBox.addListener('places_changed', function() {
         searchBoxPlaces(this);
     });
-
-    // Listen for the event fired when the user selects a prediction and clicks
-    // "go" more details for that place.
-    document.getElementById('go-places').addEventListener('click', textSearchPlaces);
 
     // Add an event listener so that the polygon is captured,  call the
     // searchWithinPolygon function. This will show the markers in the polygon,
@@ -336,7 +350,7 @@ function initMap() {
         polygon.getPath().addListener('set_at', searchWithinPolygon);
         polygon.getPath().addListener('insert_at', searchWithinPolygon);
     });
-    ko.applyBindings(new AppViewModel());
+
 
 }
 
@@ -386,34 +400,12 @@ function populateInfoWindow(marker, infowindow) {
     }
 }
 
-// This function will loop through the markers array and display them all.
-function showListings() {
-    var bounds = new google.maps.LatLngBounds();
-    // Extend the boundaries of the map for each marker and display the marker
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
-        bounds.extend(markers[i].position);
-    }
-    map.fitBounds(bounds);
-}
+
 
 // This function will loop through the listings and hide them all.
 function hideMarkers(markers) {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
-    }
-}
-
-//This function will filter the visible markers (on the map) by the search term of the theater Brand
-function filterMarkers(brand) {
-    for (var i = 0; i < markers.length; i++) {
-        // Set matching markers to visible
-        marker = markers[i];
-        if (marker.title.startsWith(brand) || brand.length === 0) {
-            marker.setVisible(true);
-        } else {
-            marker.setVisible(false);
-        }
     }
 }
 
