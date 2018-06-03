@@ -13,9 +13,9 @@
 <body>
     <div class="container">
         <!-- MAP -->
-        <div id="main">
+        <div id="main" class="main">
             <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-            <div id="map"></div>
+            <div id="map" class="map"></div>
         </div>
         <!-- OPTIONS BOX -->
         <div id="mySidenav" class="sidenav">
@@ -33,7 +33,7 @@
                 <input id="show-listings" type="button" value="Show Listings">
                 <input id="hide-listings" type="button" value="Hide Listings">
                 <h3>Filter Listings:</h3>
-                <input id="filter-listings" data-bind="value: filter, valueUpdate: 'afterkeydown'" />
+                <input id="filter-listings" type="text" data-bind="value: filter, valueUpdate: 'afterkeydown'" />
                 <h3>Draw a shape to search within it for theaters!</h3>
                 <input id="toggle-drawing" type="button" value="Drawing Tools">
                 <hr>

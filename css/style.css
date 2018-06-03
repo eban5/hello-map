@@ -16,10 +16,10 @@ body {
 
 
 input[type=button], input[type=text]{
-    display: inline-block;
+    display: block;
     padding: 0.35em 1.2em;
     border: 0.1em solid #FFFFFF;
-    margin: 0 0.3em 0.3em 0;
+    margin: 5px auto;
     border-radius: 0.12em;
     box-sizing: border-box;
     text-decoration: none;
@@ -29,6 +29,7 @@ input[type=button], input[type=text]{
     text-align: center;
     transition: all 0.2s;
     cursor: pointer;
+    width:  75%;
 }
 
 input[type=button]:hover {
@@ -127,7 +128,7 @@ a:hover {
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-#main {
+.main {
     transition: margin-left .5s;
     /* padding: 20px; */
     height: 100%;
@@ -151,7 +152,7 @@ hr {
     border: none;
 }
 
-#map {
+.map {
     height: 100%;
     width: 100%;
     position: relative;
@@ -177,26 +178,11 @@ hr {
     margin-bottom: 90px;
 }
 
-#pano {
+.pano {
     width: 200px;
     height: 200px;
 }
 
 .text {
     font-size: 12px;
-}
-
-#hide-listings,
-#show-listings,
-#filter-listings,
-#toggle-drawing,
-#zoom-to-area,
-#zoom-to-area-text,
-#places-search,
-#search-within-time-text,
-#search-within-time,
-#go-places {
-    width: 75%;
-    display: block;
-    margin: 5px auto;
 }

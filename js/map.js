@@ -138,94 +138,6 @@ function initMap() {
         { title: 'AMC Loews Georgetown', location: { lat: 38.902693, lng: -77.061733 } }
     ];
 
-    var Location = function(info) {
-        this.title = info.title;
-        this.location = info.location;
-        this.marker = info.marker;
-    }
-
-    /* ----------------------------------------------------------------------
-       KNOCKOUT JS - organizing and storing markers
-    ---------------------------------------------------------------------- */
-
-    function AppViewModel() {
-
-        /*
-                //missing Knockout function
-                var stringStartsWith = function(string, startsWith) {
-                    string = string || "";
-                    if (startsWith.length > string.length)
-                        return false;
-                    return string.substring(0, startsWith.length) === startsWith;
-                };
-        */
-
-        var self = this;
-        self.filter = ko.observable("");
-        self.maxDuration = ko.observableArray([10, 15, 30, 60]);
-        self.travelMethod = ko.observableArray([
-            { value: "DRIVING", displayText: "drive" },
-            { value: "WALKING", displayText: "walk" },
-            { value: "BICYCLING", displayText: "bike" },
-            { value: "TRANSIT", displayText: "transit" }
-        ]);
-
-        // These are movie theaters that will be shown to the user.
-        self.listLocations = ko.observableArray([]);
-
-        locations.forEach(function(location) {
-            self.listLocations().push(new Location(location))
-        });
-
-        // for (var i = 0; i < locations.length; i++) {
-        //     self.listLocations().push(locations[i]);
-        // }
-
-        //this next launchWindow snippet is my own but I looked at an instructor post at https://discussions.udacity.com/t/open-marker-infowindow-when-clicked-on-from-list/746580 when I got stuck. This helped guide my research.
-        self.launchWindow = function(location) {
-            //map the selected location to the Google Maps marker from our locations array by matching title
-            var marker = markers.filter(m => m.title === location.title)[0];
-            if (marker) {
-                google.maps.event.trigger(marker, 'click');
-            }
-        };
-
-        //filter the list of markers as well as the drawn marker icons on the map
-        self.filteredItems = ko.computed(function() {
-            var filter = self.filter().toLowerCase();
-            if (!filter) {
-                ko.utils.arrayForEach(self.listLocations(), function(item) {
-                    item.marker.setVisible(true);
-                });
-                return self.listLocations();
-            } else {
-                return ko.utils.arrayFilter(self.listLocations(), function(item) {
-                    var result = (item.title.toLowerCase().search(filter) >= 0)
-                    item.marker.setVisible(result);
-                    return result;
-                });
-            }
-        });
-
-    }
-
-    /* ----------------------------------------------------------------------
-    ---------------------------------------------------------------------- */
-
-    var largeInfowindow = new google.maps.InfoWindow();
-
-    // Initialize the drawing manager.
-    var drawingManager = new google.maps.drawing.DrawingManager({
-        drawingMode: google.maps.drawing.OverlayType.POLYGON,
-        drawingControl: true,
-        drawingControlOptions: {
-            position: google.maps.ControlPosition.TOP_LEFT,
-            drawingModes: [
-                google.maps.drawing.OverlayType.POLYGON
-            ]
-        }
-    });
-
     // Style the markers a bit. This will be our listing marker icon.
     var defaultIcon = makeMarkerIcon('155263');
 
@@ -263,6 +175,92 @@ function initMap() {
             this.setIcon(defaultIcon);
         });
     }
+
+    /* ----------------------------------------------------------------------
+       KNOCKOUT JS - organizing and storing markers
+    ---------------------------------------------------------------------- */
+
+    function AppViewModel() {
+
+        /*
+                //missing Knockout function
+                var stringStartsWith = function(string, startsWith) {
+                    string = string || "";
+                    if (startsWith.length > string.length)
+                        return false;
+                    return string.substring(0, startsWith.length) === startsWith;
+                };
+        */
+
+        var self = this;
+        self.filter = ko.observable("");
+        self.maxDuration = ko.observableArray([10, 15, 30, 60]);
+        self.travelMethod = ko.observableArray([
+            { value: "DRIVING", displayText: "drive" },
+            { value: "WALKING", displayText: "walk" },
+            { value: "BICYCLING", displayText: "bike" },
+            { value: "TRANSIT", displayText: "transit" }
+        ]);
+
+        // These are movie theaters that will be shown to the user.
+        self.listLocations = ko.observableArray([]);
+
+        for (var i = 0; i < locations.length; i++) {
+            //add the corresponding marker to the locations array
+            locations[i].marker = markers[i];
+
+            self.listLocations().push(locations[i]);
+        }
+
+        //this next launchWindow snippet is my own but I looked at an instructor post at https://discussions.udacity.com/t/open-marker-infowindow-when-clicked-on-from-list/746580 when I got stuck. This helped guide my research.
+        self.launchWindow = function(location) {
+            //map the selected location to the Google Maps marker from our locations array by matching title
+            var marker = markers.filter(m => m.title === location.title)[0];
+            if (marker) {
+                google.maps.event.trigger(marker, 'click');
+            }
+        };
+
+        //filter the list of markers as well as the drawn marker icons on the map
+        self.filteredItems = ko.computed(function() {
+            var filter = self.filter().toLowerCase();
+            if (!filter) {
+                ko.utils.arrayForEach(self.listLocations(), function(item) {
+                    item.marker.setVisible(true);
+                });
+                return self.listLocations();
+            } else {
+                return ko.utils.arrayFilter(self.listLocations(), function(item) {
+                    var result = (item.title.toLowerCase().search(filter) >= 0)
+                    item.marker.setVisible(result);
+                    return result;
+                });
+            }
+        });
+    }
+
+    /* ----------------------------------------------------------------------
+    ---------------------------------------------------------------------- */
+
+    var largeInfowindow = new google.maps.InfoWindow();
+
+    // Initialize the drawing manager.
+    var drawingManager = new google.maps.drawing.DrawingManager({
+        drawingMode: google.maps.drawing.OverlayType.POLYGON,
+        drawingControl: true,
+        drawingControlOptions: {
+            position: google.maps.ControlPosition.TOP_LEFT,
+            drawingModes: [
+                google.maps.drawing.OverlayType.POLYGON
+            ]
+        }
+    });
+
+
+    /* ----------------------------------------------------------------------
+       CLICK EVENTS
+    ---------------------------------------------------------------------- */
+
 
     function animateMarker(marker) {
         highlightMarker(marker)
@@ -365,7 +363,7 @@ function populateInfoWindow(marker, infowindow) {
                 var nearStreetViewLocation = data.location.latLng;
                 var heading = google.maps.geometry.spherical.computeHeading(
                     nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+                infowindow.setContent('<div>' + marker.title + '</div><div id="pano" class="pano"></div>');
                 var panoramaOptions = {
                     position: nearStreetViewLocation,
                     pov: {
