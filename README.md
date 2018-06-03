@@ -8,6 +8,10 @@ See the live demo at [https://eban5.github.io/hello-map/](https://eban5.github.i
 2. Open "index.html" with your browser of choice
 3. Click on the "hamburger" icon to expand the options menu
 
+## Screenshot
+
+![Hello Map Screenshot](https://github.com/eban5/hello-map/blob/master/hello-map-screenshot.png)
+
 ### Attributions
 
 1. Input button styling adapted from CSS Button Styling on [Federico Dossena's Blog](https://fdossena.com/?p=html5cool/buttons/i.frag)

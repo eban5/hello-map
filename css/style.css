@@ -76,6 +76,11 @@ h3 {
 /*
  * Hamburger icon and menu made by Erik Terwan
  */
+.hamburger {
+    font-size:30px;
+    cursor:pointer;
+    margin-left: 5px;
+}
 
 a {
     text-decoration: none;
