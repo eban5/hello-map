@@ -60,7 +60,12 @@
                 <h3>Popular Restaurants Nearby</h3>
                 <br>
                 <a style="margin: -32px 0 15px 32px" href="https://developer.foursquare.com/" target="_blank"><img src="foursquare.png" width="50%"></a>
-                <div class="topfive">
+                <div class="topfive" style="margin-bottom: 150px">
+                    <ul data-bind="foreach: venueList">
+                        <li>
+                            <span data-bind="text: venueName"></span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

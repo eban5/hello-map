@@ -163,7 +163,8 @@ function initMap() {
         marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow);
             animateMarker(this);
-            getFoursquare(this);
+            // getFoursquare(this);
+            avm.getFoursquare(this);
         });
         // Two event listeners - one for mouseover, one for mouseout,
         // to change the colors back and forth.
@@ -182,12 +183,15 @@ function initMap() {
     function AppViewModel() {
         var self = this;
 
-        self.filter = ko.observable("");
-        self.maxDuration = ko.observableArray([10, 15, 30, 60]);
-        self.travelMethod = ko.observableArray(["DRIVING", "WALKING", "BICYCLING", "TRANSIT"]);
+        this.filter = ko.observable("");
+        this.maxDuration = ko.observableArray([10, 15, 30, 60]);
+        this.travelMethod = ko.observableArray(["DRIVING", "WALKING", "BICYCLING", "TRANSIT"]);
 
         // These are movie theaters that will be shown to the user.
         self.listLocations = ko.observableArray([]);
+
+        //venues being shown to user upon clicking a location - data provided by Foursquare API
+        self.venueList = ko.observableArray([]);
 
         for (var i = 0; i < locations.length; i++) {
             //add the corresponding marker to the locations array
@@ -214,7 +218,7 @@ function initMap() {
                 return self.listLocations();
             } else {
                 return ko.utils.arrayFilter(self.listLocations(), function(item) {
-                    var result = (item.title.toLowerCase().search(filter) >= 0)
+                    var result = (item.title.toLowerCase().search(filter) >= 0);
                     item.marker.setVisible(result);
                     return result;
                 });
@@ -233,32 +237,70 @@ function initMap() {
                 bounds.extend(markers[i].position);
             }
             map.fitBounds(bounds);
-        }
+        };
         //show the listings on load
         self.showListings();
 
         self.hideListings = function() {
             hideMarkers(markers);
-        }
+        };
 
         self.toggleDrawingMap = function() {
             toggleDrawing(drawingManager);
-        }
+        };
 
         self.toggleZoomToArea = function() {
             zoomToArea();
-        }
+        };
 
         self.toggleSearchWithinTime = function() {
             searchWithinTime();
-        }
+        };
 
         self.goPlaces = function() {
             textSearchPlaces();
-        }
+        };
+
+        /* ----------------------------------------------------------------------
+           FOURSQUARE API - Get recommendations for food near selected marker
+        ---------------------------------------------------------------------- */
+        self.getFoursquare = function(marker) {
+
+            var lat = marker.position.lat();
+            var lng = marker.position.lng();
+
+            var foursquareConfig = {
+                client_id: 'BS2SBZYCWRNCKASPGYYQIJEF03GJSJDRIQZYPJB52GTXBS3L',
+                client_secret: 'V5EW4FXDJL5SI3QNYF4YJDQFWRSZQ105GMQY1XT54A3CT514',
+                v: '20180323',
+                section: 'food',
+                ll: lat + "," + lng,
+                limit: '5'
+            };
+
+            var url = 'https://api.foursquare.com/v2/venues/explore?client_id=' + foursquareConfig.client_id + '&client_secret=' + foursquareConfig.client_secret + '&v=' + foursquareConfig.v + '&section=' + foursquareConfig.section + '&ll=' + foursquareConfig.ll + '&limit=' + foursquareConfig.limit;
+
+
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                success: function(data) {
+                    var venues = data.response.groups[0].items;
+                    self.venueList([]);
+                    $.each(venues, function(i, venue) {
+                        self.venueList.push({ venueName: venue.venue.name });
+                    });
+                },
+                error: function(data) {
+                    alert("Error with the Foursquare API. Please contact the webmaster. Sorry for the inconvenience.");
+                    console.log(data)
+                }
+            });
+        };
     }
 
-    ko.applyBindings(new AppViewModel());
+    var avm = new AppViewModel();
+    ko.applyBindings(avm);
     /* ----------------------------------------------------------------------
     ---------------------------------------------------------------------- */
 
@@ -287,23 +329,11 @@ function initMap() {
 
     function highlightMarker(marker) {
         marker.setIcon(highlightedIcon);
-        // var promise = new Promise(function(resolve, reject) {
-        //     setTimeout(function() {
-        //         resolve(marker.setIcon(highlightedIcon));
-        //     }, 200);
-        // });
-        // return promise;
-    };
+    }
 
     function unHighlightMarker(marker) {
-        marker.setIcon(defaultIcon)
-        // var promise = new Promise(function(resolve, reject) {
-        //     setTimeout(function() {
-        //         resolve(marker.setIcon(defaultIcon));
-        //     }, 4000);
-        // });
-        // return promise;
-    };
+        marker.setIcon(defaultIcon);
+    }
 
     // Listen for the event fired when the user selects a prediction from the
     // picklist and retrieve more details for that place.
@@ -702,63 +732,4 @@ function getPlacesDetails(marker, infowindow) {
             });
         }
     });
-}
-
-/* ----------------------------------------------------------------------
-   FOURSQUARE API - Get recommendations for food near selected marker
----------------------------------------------------------------------- */
-
-function getFoursquare(marker) {
-
-    var lat = marker.position.lat();
-    var lng = marker.position.lng();
-
-    var foursquareConfig = {
-        client_id: 'BS2SBZYCWRNCKASPGYYQIJEF03GJSJDRIQZYPJB52GTXBS3L',
-        client_secret: 'V5EW4FXDJL5SI3QNYF4YJDQFWRSZQ105GMQY1XT54A3CT514',
-        v: '20180323',
-        section: 'food',
-        ll: lat + "," + lng,
-        limit: '5'
-    };
-
-    var url = 'https://api.foursquare.com/v2/venues/explore?client_id=' + foursquareConfig.client_id + '&client_secret=' + foursquareConfig.client_secret + '&v=' + foursquareConfig.v + '&section=' + foursquareConfig.section + '&ll=' + foursquareConfig.ll + '&limit=' + foursquareConfig.limit;
-
-
-    $.ajax({
-        url: url,
-        dataType: 'json',
-        success: function(data) {
-            var venues = data.response.groups[0].items;
-            console.log(venues);
-            $('.topfive').empty();
-            $.each(venues, function(i, venue) {
-                $('.topfive').append('<li><a href="#">' + venue.venue.name + '</a></li>');
-            });
-        },
-        error: function(data) {
-            alert("Error with the Foursquare API. Please contact the webmaster. Sorry for the inconvenience.");
-            console.log(data)
-        }
-    });
-
-    // function getVenueLink(venueID) {
-
-    //     var requestURL = 'https://api.foursquare.com/v2/venues/' + venueID + '?client_id=' + foursquareConfig.client_id + '&client_secret=' + foursquareConfig.client_secret + '&v=' + foursquareConfig.v;
-
-    //     $.ajax({
-    //         url: requestURL,
-    //         dataType: 'json',
-    //         success: function(response) {
-    //             var venueLink = response.response.venue.canonicalUrl;
-    //             console.log(venueLink)
-    //             return venueLink;
-    //         },
-    //         error: function(response) {
-    //             alert("Foursquare API error. Please contact the webmaster.")
-    //             console.log(response)
-    //         }
-    //     });
-    // }
-
 }
