@@ -138,11 +138,10 @@ function initMap() {
         { title: 'AMC Loews Georgetown', location: { lat: 38.902693, lng: -77.061733 } }
     ];
 
-    // Style the markers a bit. This will be our listing marker icon.
+    // Default marker style
     var defaultIcon = makeMarkerIcon('155263');
 
-    // Create a "highlighted location" marker color for when the user
-    // mouses over the marker.
+    // Highlighted marker style for mouseover and click.
     var highlightedIcon = makeMarkerIcon('f0b917');
 
     // The following group uses the location array to create an array of markers on initialize.
@@ -181,21 +180,11 @@ function initMap() {
     ---------------------------------------------------------------------- */
 
     function AppViewModel() {
-
-        /*
-                //missing Knockout function
-                var stringStartsWith = function(string, startsWith) {
-                    string = string || "";
-                    if (startsWith.length > string.length)
-                        return false;
-                    return string.substring(0, startsWith.length) === startsWith;
-                };
-        */
-
         var self = this;
+
         self.filter = ko.observable("");
         self.maxDuration = ko.observableArray([10, 15, 30, 60]);
-        self.travelMethod = ko.observableArray(["DRIVING","WALKING","BICYCLING","TRANSIT"]);
+        self.travelMethod = ko.observableArray(["DRIVING", "WALKING", "BICYCLING", "TRANSIT"]);
 
         // These are movie theaters that will be shown to the user.
         self.listLocations = ko.observableArray([]);
@@ -203,7 +192,6 @@ function initMap() {
         for (var i = 0; i < locations.length; i++) {
             //add the corresponding marker to the locations array
             locations[i].marker = markers[i];
-
             self.listLocations().push(locations[i]);
         }
 
@@ -268,14 +256,9 @@ function initMap() {
         self.goPlaces = function() {
             textSearchPlaces();
         }
-
     }
 
-
-
     ko.applyBindings(new AppViewModel());
-
-
     /* ----------------------------------------------------------------------
     ---------------------------------------------------------------------- */
 
@@ -293,35 +276,34 @@ function initMap() {
         }
     });
 
-
     /* ----------------------------------------------------------------------
        CLICK EVENTS
     ---------------------------------------------------------------------- */
-
-
     function animateMarker(marker) {
-        highlightMarker(marker)
-            .then(unHighlightMarker(marker));
+        toggleBounce(marker);
+        highlightMarker(marker);
+        setTimeout(function() { unHighlightMarker(marker) }, 1500);
     }
 
     function highlightMarker(marker) {
-        var promise = new Promise(function(resolve, reject) {
-            setTimeout(function() {
-                resolve(marker.setIcon(highlightedIcon));
-            }, 200);
-        });
-        return promise;
+        marker.setIcon(highlightedIcon);
+        // var promise = new Promise(function(resolve, reject) {
+        //     setTimeout(function() {
+        //         resolve(marker.setIcon(highlightedIcon));
+        //     }, 200);
+        // });
+        // return promise;
     };
 
-    function unHighlightMarker() {
-        var promise = new Promise(function(resolve, reject) {
-            setTimeout(function() {
-                resolve(marker.setIcon(defaultIcon));
-            }, 4000);
-        });
-        return promise;
+    function unHighlightMarker(marker) {
+        marker.setIcon(defaultIcon)
+        // var promise = new Promise(function(resolve, reject) {
+        //     setTimeout(function() {
+        //         resolve(marker.setIcon(defaultIcon));
+        //     }, 4000);
+        // });
+        // return promise;
     };
-
 
     // Listen for the event fired when the user selects a prediction from the
     // picklist and retrieve more details for that place.
@@ -350,8 +332,15 @@ function initMap() {
         polygon.getPath().addListener('set_at', searchWithinPolygon);
         polygon.getPath().addListener('insert_at', searchWithinPolygon);
     });
+}
 
-
+function toggleBounce(marker) {
+    if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function() { marker.setAnimation(null); }, 1500);
+    }
 }
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
@@ -399,7 +388,6 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.open(map, marker);
     }
 }
-
 
 
 // This function will loop through the listings and hide them all.
@@ -745,33 +733,32 @@ function getFoursquare(marker) {
             console.log(venues);
             $('.topfive').empty();
             $.each(venues, function(i, venue) {
-                var fsURL = "";
-
-                var venueURL = 'https://api.foursquare.com/v2/venues/' + venue.venue.id + '/?client_id=' + foursquareConfig.client_id + '&client_secret=' + foursquareConfig.client_secret + '&v=' + foursquareConfig.v;
-                fsURL = getVenueLink(venueURL);
-                console.log(fsURL)
-                $('.topfive').append('<li><a href="' + fsURL + '">' + venue.venue.name + '</a></li>');
+                $('.topfive').append('<li><a href="#">' + venue.venue.name + '</a></li>');
             });
         },
         error: function(data) {
             alert("Error with the Foursquare API. Please contact the webmaster. Sorry for the inconvenience.");
+            console.log(data)
         }
     });
 
-    function getVenueLink(fsurl) {
+    // function getVenueLink(venueID) {
 
-        $.ajax({
-            url: fsurl,
-            dataType: 'json',
-            success: function(response) {
-                var venueLink = response.response.venue.canonicalUrl;
-                console.log(venueLink)
-                return venueLink;
-            },
-            error: function(response) {
-                alert("Foursquare API error. Please contact the webmaster.")
-            }
-        });
-    }
+    //     var requestURL = 'https://api.foursquare.com/v2/venues/' + venueID + '?client_id=' + foursquareConfig.client_id + '&client_secret=' + foursquareConfig.client_secret + '&v=' + foursquareConfig.v;
+
+    //     $.ajax({
+    //         url: requestURL,
+    //         dataType: 'json',
+    //         success: function(response) {
+    //             var venueLink = response.response.venue.canonicalUrl;
+    //             console.log(venueLink)
+    //             return venueLink;
+    //         },
+    //         error: function(response) {
+    //             alert("Foursquare API error. Please contact the webmaster.")
+    //             console.log(response)
+    //         }
+    //     });
+    // }
 
 }
