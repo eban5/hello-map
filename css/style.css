@@ -188,6 +188,10 @@ hr {
     height: 200px;
 }
 
+.foursquare-logo {
+    width: 50%;
+}
+
 .text {
     font-size: 12px;
 }
