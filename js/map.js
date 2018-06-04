@@ -1,5 +1,5 @@
-/*global google */
-/*global ko */
+/*global google, ko, $, document, window */
+
 "use strict";
 
 function openNav() {
@@ -38,77 +38,11 @@ var placeMarkers = [];
 
 
 function initMap() {
-    // Create a styles array to use with the map.
-    var styles = [{
-        featureType: 'water',
-        stylers: [
-            { color: '#84b9ef' }
-        ]
-    }, {
-        featureType: 'administrative',
-        elementType: 'labels.text.stroke',
-        stylers: [
-            { color: '#ffffff' },
-            { weight: 6 }
-        ]
-    }, {
-        featureType: 'administrative',
-        elementType: 'labels.text.fill',
-        stylers: [
-            { color: '#557669' }
-        ]
-    }, {
-        featureType: 'road.highway',
-        elementType: 'geometry.stroke',
-        stylers: [
-            { color: '#efe9e4' },
-            { lightness: -40 }
-        ]
-    }, {
-        featureType: 'transit.station',
-        stylers: [
-            { weight: 9 },
-            { hue: '#e85113' }
-        ]
-    }, {
-        featureType: 'road.highway',
-        elementType: 'labels.icon',
-        stylers: [
-            { visibility: 'off' }
-        ]
-    }, {
-        featureType: 'water',
-        elementType: 'labels.text.stroke',
-        stylers: [
-            { lightness: 100 }
-        ]
-    }, {
-        featureType: 'water',
-        elementType: 'labels.text.fill',
-        stylers: [
-            { lightness: -100 }
-        ]
-    }, {
-        featureType: 'poi',
-        elementType: 'geometry',
-        stylers: [
-            { visibility: 'on' },
-            { color: '#f0e4d3' }
-        ]
-    }, {
-        featureType: 'road.highway',
-        elementType: 'geometry.fill',
-        stylers: [
-            { color: '#ebebeb' },
-            { lightness: -25 }
-        ]
-    }];
-
     // Constructor creates a new map - only center and zoom are required.
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 38.862606, lng: -77.087269 },
         zoom: 13,
-        styles: styles,
+        styles: STYLES,
         mapTypeControl: false
     });
 
@@ -145,7 +79,7 @@ function initMap() {
     var highlightedIcon = makeMarkerIcon('f0b917');
 
     // The following group uses the location array to create an array of markers on initialize.
-    for (var i = 0; i < locations.length; i++) {
+    for (var i = 0, len = locations.length; i < len; i++) {
         // Get the position from the location array.
         var position = locations[i].location;
         var title = locations[i].title;
@@ -282,20 +216,20 @@ function initMap() {
 
 
             $.ajax({
-                url: url,
-                dataType: 'json',
-                success: function(data) {
+                    url: url,
+                    dataType: 'json'
+                })
+                .done(function(data) {
                     var venues = data.response.groups[0].items;
                     self.venueList([]);
-                    $.each(venues, function(i, venue) {
+                    venues.forEach(function(venue) {
                         self.venueList.push({ venueName: venue.venue.name });
                     });
-                },
-                error: function(data) {
+                })
+                .fail(function(data) {
                     alert("Error with the Foursquare API. Please contact the webmaster. Sorry for the inconvenience.");
                     console.log(data)
-                }
-            });
+                });
         };
     }
 
@@ -324,7 +258,7 @@ function initMap() {
     function animateMarker(marker) {
         toggleBounce(marker);
         highlightMarker(marker);
-        setTimeout(function() { unHighlightMarker(marker) }, 1500);
+        setTimeout(function() { unHighlightMarker(marker) }, 1400);
     }
 
     function highlightMarker(marker) {
@@ -369,7 +303,7 @@ function toggleBounce(marker) {
         marker.setAnimation(null);
     } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout(function() { marker.setAnimation(null); }, 1500);
+        setTimeout(function() { marker.setAnimation(null); }, 1400);
     }
 }
 
